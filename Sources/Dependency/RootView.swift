@@ -9,7 +9,7 @@ import ComposableArchitecture
 import SwiftUI
 
 struct RootFeature: Reducer {
-    struct State {
+    struct State: Equatable {
         var actorsList: ActorsListFeature.State = .init(actors: [])
         var actorsPath: StackState<Path.State> = .init()
         var moviesList: MoviesListFeature.State = .init(movies: [])
@@ -24,7 +24,7 @@ struct RootFeature: Reducer {
     }
     
     struct Path: Reducer {
-        enum State {
+        enum State: Equatable {
             case actorDetail(ActorDetailFeature.State)
             case movieDetail(MovieDetailFeature.State)
         }

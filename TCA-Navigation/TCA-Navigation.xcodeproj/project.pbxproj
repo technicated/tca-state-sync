@@ -39,6 +39,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		658A2D072ABE26E8006DC953 /* Dependency.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; name = Dependency.xctestplan; path = ../Dependency.xctestplan; sourceTree = "<group>"; };
 		65AC7A362AA34C890050D32D /* TCA-Navigation.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "TCA-Navigation.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		65AC7A392AA34C890050D32D /* TCA_NavigationApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TCA_NavigationApp.swift; sourceTree = "<group>"; };
 		65AC7A3B2AA34C890050D32D /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -92,6 +93,7 @@
 		65AC7A2D2AA34C890050D32D = {
 			isa = PBXGroup;
 			children = (
+				658A2D072ABE26E8006DC953 /* Dependency.xctestplan */,
 				65AC7A382AA34C890050D32D /* TCA-Navigation */,
 				65E711082AAAEFFF00976746 /* TCA-Navigation */,
 				65AC7A492AA34C8A0050D32D /* TCA-NavigationTests */,
