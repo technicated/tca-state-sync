@@ -59,7 +59,16 @@ struct ActorDetailFeature: Reducer {
                     state.actor = actor
                     return .none
 
-                case .linksChanged(.initial):
+                case let .linksChanged(.initial(links)):
+                    let actorId = state.actor.id
+                    let movies = storage.movies_.all()
+
+                    state.movies = .init(
+                        uniqueElements: links.values
+                            .filter { $0.id.actorId == actorId }
+                            .compactMap { movies[$0.id.movieId] }
+                    )
+                    
                     return .none
                     
                 case let .linksChanged(.changes(_, insertions, _, deletions)):
@@ -110,7 +119,7 @@ struct ActorDetailFeature: Reducer {
                             }
                         },
                         .run { send in
-                            for await change in storage.links_.observeAll() {
+                            for await change in storage.links_.observeAll() {                                
                                 await send(.linksChanged(change))
                             }
                         }
