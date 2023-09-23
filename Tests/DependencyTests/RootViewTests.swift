@@ -42,9 +42,9 @@ class RootViewTests: XCTestCase {
             RootFeature()
         } withDependencies: {
             let storage = Storage.liveValue
-            storage.actors_.upsert(Actor(id: .init(UUID(1)), name: "Actor"))
-            storage.movies_.upsert(Movie(id: .init(UUID(1)), title: "Movie"))
-            storage.links_.upsert(Link(id: .init(actorId: .init(UUID(1)), movieId: .init(UUID(1)))))
+            storage.actors.upsert(Actor(id: .init(UUID(1)), name: "Actor"))
+            storage.movies.upsert(Movie(id: .init(UUID(1)), title: "Movie"))
+            storage.links.upsert(Link(id: .init(actorId: .init(UUID(1)), movieId: .init(UUID(1)))))
             $0.storage = storage
         }
         

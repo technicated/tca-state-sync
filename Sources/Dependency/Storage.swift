@@ -63,21 +63,9 @@ struct Resource<T: Identifiable> {
 }
 
 struct Storage {
-    var actor: (Actor.ID) -> AsyncStream<Actor>
-    var upsertActor: (Actor) -> Void
-    var actorLinks: (Actor.ID) -> AsyncStream<[Movie]>
-     
-    var movies: () -> [Movie.ID: Movie]
-    var movie: (Movie.ID) -> AsyncStream<Movie>
-    var upsertMovie: (Movie) -> Void
-    var moviesLinks: (Movie.ID) -> AsyncStream<[Actor]>
-     
-    var link: (Actor, Movie) -> Void
-    var unlink: (Actor, Movie) -> Void
-    
-    var actors_: Resource<Actor>
-    var movies_: Resource<Movie>
-    var links_: Resource<Link>
+    var actors: Resource<Actor>
+    var movies: Resource<Movie>
+    var links: Resource<Link>
 }
 
 private extension Storage {
@@ -143,69 +131,7 @@ private extension Storage {
         }
         
         return Storage(
-            actor: { actorId in
-                actors
-                    .compactMap { $0[actorId] }
-                    .values
-                    .eraseToStream()
-            },
-            upsertActor: { actor in
-                actors.value[actor.id] = actor
-            },
-            actorLinks: { actorId in
-                links.map { links in
-                    var result: [Movie] = []
-
-                    for (movieId, actorsIds) in links {
-                        guard
-                            actorsIds.contains(actorId),
-                            let movie = movies.value[movieId]
-                        else { continue }
-                        
-                        result.append(movie)
-                    }
-                    
-                    return result
-                }
-                .values
-                .eraseToStream()
-            },
-            movies: {
-                movies.value
-            },
-            movie: { movieId in
-                movies
-                    .compactMap { $0[movieId] }
-                    .values
-                    .eraseToStream()
-            },
-            upsertMovie: { movie in
-                movies.value[movie.id] = movie
-            },
-            moviesLinks: { movieId in
-                links.map { links in
-                    var result: [Actor] = []
-
-                    for actorId in links[movieId] ?? [] {
-                        guard
-                            let actor = actors.value[actorId]
-                        else { continue }
-                        
-                        result.append(actor)
-                    }
-                    
-                    return result
-                }
-                .values
-                .eraseToStream()
-            },
-            link: { actor, movie in
-                links.value[movie.id, default: []].insert(actor.id)
-            },
-            unlink: { actor, movie in
-                links.value[movie.id, default: []].remove(actor.id)
-            },
-            actors_: .init(
+            actors: .init(
                 all: { actors.value },
                 delete: { actors.value.removeValue(forKey: $0.id) },
                 object: { actors.value[$0] },
@@ -213,7 +139,7 @@ private extension Storage {
                 observeObject: { pipeline2(source: actors, id: $0) },
                 upsert: { actors.value[$0.id] = $0 }
             ),
-            movies_: .init(
+            movies: .init(
                 all: { movies.value },
                 delete: { movies.value.removeValue(forKey: $0.id) },
                 object: { movies.value[$0] },
@@ -221,7 +147,7 @@ private extension Storage {
                 observeObject: { pipeline2(source: movies, id: $0) },
                 upsert: { movies.value[$0.id] = $0 }
             ),
-            links_: .init(
+            links: .init(
                 all: { linkTx(input: links.value) },
                 delete: { links.value[$0.id.movieId, default: []].remove($0.id.actorId) },
                 object: { linkTx(input: links.value)[$0] },

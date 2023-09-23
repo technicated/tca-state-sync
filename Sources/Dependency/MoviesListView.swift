@@ -58,7 +58,7 @@ struct MoviesListFeature: Reducer {
 
                 case .sync:
                     return .run { send in
-                        for await change in storage.movies_.observeAll() {
+                        for await change in storage.movies.observeAll() {
                             await send(.moviesChanged(change))
                         }
                     }

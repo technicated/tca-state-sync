@@ -70,7 +70,7 @@ struct MovieDetailFeature: Reducer {
                      
                 case let .linksChanged(.initial(links)):
                     let movieId = state.movie.id
-                    let actors = storage.actors_.all()
+                    let actors = storage.actors.all()
 
                     state.actors = .init(
                         uniqueElements: links.values
@@ -82,7 +82,7 @@ struct MovieDetailFeature: Reducer {
                     
                 case let .linksChanged(.changes(_, insertions, _, deletions)):
                     let movieId = state.movie.id
-                    let actors = storage.actors_.all()
+                    let actors = storage.actors.all()
 
                     state.actors.append(
                         contentsOf: insertions
@@ -109,17 +109,17 @@ struct MovieDetailFeature: Reducer {
                 case .sync:
                     return .merge(
                         .run { [movieId = state.movie.id] send in
-                            for await change in storage.movies_.observeObject(movieId) {
+                            for await change in storage.movies.observeObject(movieId) {
                                 await send(.movieChanged(change))
                             }
                         },
                         .run { send in
-                            for await change in storage.actors_.observeAll() {
+                            for await change in storage.actors.observeAll() {
                                 await send(.actorsChanged(change))
                             }
                         },
                         .run { send in
-                            for await change in storage.links_.observeAll() {
+                            for await change in storage.links.observeAll() {
                                 await send(.linksChanged(change))
                             }
                         }
@@ -152,7 +152,7 @@ struct MovieDetailFeature: Reducer {
         BindingReducer()
             .onChange(of: \.movie.title) { oldValue, newValue in
                 Reduce { state, action in
-                    storage.upsertMovie(state.movie)
+                    storage.movies.upsert(state.movie)
                     return .none
                 }
             }
@@ -163,7 +163,7 @@ struct MovieDetailFeature: Reducer {
                 state.isSelectingActor = false
                 state.actors.append(actor)
 
-                storage.links_.upsert(
+                storage.links.upsert(
                     Link(
                         id: .init(
                             actorId: actor.id,
@@ -199,7 +199,7 @@ struct MovieDetailFeature: Reducer {
                 }
 
                 for id in ids {
-                    storage.links_.delete(
+                    storage.links.delete(
                         Link(
                             id: .init(
                                 actorId: id,

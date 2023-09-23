@@ -58,7 +58,7 @@ struct ActorsListFeature: Reducer {
 
                 case .sync:
                     return .run { send in
-                        for await change in storage.actors_.observeAll() {
+                        for await change in storage.actors.observeAll() {
                             await send(.actorsChanged(change))
                         }
                     }
