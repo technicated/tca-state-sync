@@ -117,6 +117,18 @@ struct ActorDetailFeature: Reducer {
                     )
                 }
             }
+            .onChange(of: \.movies) { oldValue, newValue in
+                Reduce { state, action in
+                    state.movies.sort { $0.title < $1.title }
+                    return .none
+                }
+            }
+            .onChange(of: \.allMovies) { oldValue, newValue in
+                Reduce { state, action in
+                    state.allMovies.sort { $0.title < $1.title }
+                    return .none
+                }
+            }
         }
     }
 

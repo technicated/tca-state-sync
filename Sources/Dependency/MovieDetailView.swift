@@ -117,6 +117,18 @@ struct MovieDetailFeature: Reducer {
                     )
                 }
             }
+            .onChange(of: \.actors) { oldValue, newValue in
+                Reduce { state, action in
+                    state.actors.sort { $0.name < $1.name }
+                    return .none
+                }
+            }
+            .onChange(of: \.allActors) { oldValue, newValue in
+                Reduce { state, action in
+                    state.allActors.sort { $0.name < $1.name }
+                    return .none
+                }
+            }
         }
     }
 
