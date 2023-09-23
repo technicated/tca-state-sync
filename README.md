@@ -30,7 +30,7 @@ test, but it works as a proof of concept.
 The solution also uses a `Storage` Reducer inside the lists and details feature
 Reducers to encapsulate and implement all the sync logic. The shape of the
 `Storage` dependency was loosely inspired by the API of
-[Realm](https://www.mongodb.com/docs/realm/sdk/swift/react-to-changes/).
+[Realm](https://www.mongodb.com/docs/realm/sdk/swift/quick-start/#watch-for-changes).
 
 
 
